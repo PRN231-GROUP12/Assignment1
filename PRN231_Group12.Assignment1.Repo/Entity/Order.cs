@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using PRN231_Group12.Assignment1.Repo.Entity;
 
 namespace PRN231_Group12.Assignment1.Repo
 {

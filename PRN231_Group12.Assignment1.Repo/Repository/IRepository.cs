@@ -13,7 +13,7 @@ namespace PRN231_Group12.Assignment1.Repo.Repository
         void Update(TEntity entity);
         void Delete(TEntity entity);
         void Delete(object id);
-        TEntity? GetById(object? id);
+        TEntity? GetById(object? id, params Expression<Func<TEntity, object>>[] includeProperties);
 
         IEnumerable<TEntity> Get(
             int? pageIndex = 0,

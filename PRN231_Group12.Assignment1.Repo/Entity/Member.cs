@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PRN231_Group12.Assignment1.Repo
+﻿namespace PRN231_Group12.Assignment1.Repo.Entity
 {
     public partial class Member
     {
