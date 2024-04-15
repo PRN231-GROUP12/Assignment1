@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PRN231_Group12.Assignment1.API.DTO;
+using PRN231_Group12.Assignment1.API.Request;
 using PRN231_Group12.Assignment1.Repo;
 using PRN231_Group12.Assignment1.Repo.UnitOfWork;
 
@@ -74,6 +75,53 @@ public class OrderController :  ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error occurred while fetching orders by member ID.");
+            return StatusCode(500, "Internal server error");
+        }
+    }
+    
+    [HttpDelete("{id}", Name = "DeleteOrderById")]
+    public IActionResult DeleteOrderById([FromRoute] int id)
+    {
+        try
+        {
+            var order = _unitOfWork.GetRepository<Order>().GetById(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            _unitOfWork.GetRepository<Order>().Delete(order);
+            _unitOfWork.Save();
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while deleting order by ID.");
+            return StatusCode(500, "Internal server error");
+        }
+    }
+    
+    [HttpPut("{id}", Name = "UpdateOrderById")]
+    public IActionResult UpdateOrderById([FromRoute] int id, [FromBody] UpdateOrderRequest request)
+    {
+        try
+        {
+            var order = _unitOfWork.GetRepository<Order>().GetById(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            order.MemberId = request.MemberId;
+            order.OrderDate = request.OrderDate;
+            order.RequiredDate = request.RequiredDate;
+            order.ShippedDate = request.ShippedDate;
+            order.Freight = request.Freight;
+            _unitOfWork.GetRepository<Order>().Update(order);
+            _unitOfWork.Save();
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while updating order by ID.");
             return StatusCode(500, "Internal server error");
         }
     }
