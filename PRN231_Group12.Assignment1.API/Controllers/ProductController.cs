@@ -48,33 +48,36 @@ public class ProductController :  ControllerBase
     }
     
     [HttpGet("search", Name = "SearchProducts")]
-    public IActionResult SearchProducts([FromQuery] string keyword, [FromQuery] decimal minPrice, [FromQuery] decimal maxPrice, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+    public IActionResult SearchProducts([FromQuery] string keyword, [FromQuery] string sortBy, [FromQuery] string sortOrder, [FromQuery] int pageNumber, [FromQuery] int pageSize)
     {
         try
         {
-            var products = new List<Product>();
-            if(minPrice != 0 || maxPrice != 0 || !string.IsNullOrEmpty(keyword))
+            IQueryable<Product> query = _unitOfWork.GetRepository<Product>().FindByCondition(p => p.ProductName.Contains(keyword), pageNumber, pageSize);
+            
+            if (!string.IsNullOrEmpty(keyword))
             {
-                if (minPrice != 0 && maxPrice != 0 && minPrice < maxPrice 
-                    && !string.IsNullOrEmpty(keyword))
+                query = query.Where(p => p.ProductName.Contains(keyword));
+            }
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                string sortOrderDirection = string.IsNullOrEmpty(sortOrder) || sortOrder.ToLower() == "asc" ? "ascending" : "descending";
+                switch (sortBy.ToLower())
                 {
-                    products = _unitOfWork.GetRepository<Product>()
-                        .FindByCondition(product => product.UnitPrice >= minPrice 
-                                                    && product.UnitPrice <= maxPrice,
-                            pageNumber, pageSize).ToList();
-                }
-                else if (minPrice == 0 && maxPrice == 0)
-                {
-                    products = _unitOfWork.GetRepository<Product>()
-                        .FindByCondition(product => product.ProductName.Contains(keyword),
-                            pageNumber, pageSize).ToList();
-                }
-                else
-                {
-                    return BadRequest("Invalid price range or keyword.");
+                    case "price":
+                        query = sortOrderDirection == "ascending" ? query.OrderBy(p => p.UnitPrice) : query.OrderByDescending(p => p.UnitPrice);
+                        break;
+                    case "name":
+                        query = sortOrderDirection == "ascending" ? query.OrderBy(p => p.ProductName) : query.OrderByDescending(p => p.ProductName);
+                        break;
+                    default:
+                        query = sortOrderDirection == "ascending" ? query.OrderBy(p => p.UnitPrice) : query.OrderByDescending(p => p.UnitPrice);
+                        break;
                 }
             }
             
+            var products = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
             var productDtos = products.Select(product => new ProductDto
             {
                 Id = product.Id,
@@ -83,12 +86,12 @@ public class ProductController :  ControllerBase
                 UnitPrice = product.UnitPrice,
                 UnitsInStock = product.UnitsInStock,
             }).ToList();
-        
+
             return Ok(productDtos);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while fetching products by price range and keyword.");
+            _logger.LogError(ex, "Error occurred while fetching products by keyword.");
             return StatusCode(500, "Internal server error");
         }
     }

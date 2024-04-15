@@ -12,12 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\PRN231_Group12.Assignment1.Repo\PRN231_Group12.Assignment1.Repo.csproj" />
     </ItemGroup>
 
