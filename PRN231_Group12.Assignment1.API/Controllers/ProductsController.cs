@@ -47,7 +47,7 @@ public class ProductsController :  ControllerBase
         }
     }
     
-    [HttpGet("search", Name = "SearchProducts")]
+    [HttpGet("", Name = "SearchProducts")]
     public IActionResult SearchProducts([FromQuery] string keyword, [FromQuery] string sortBy, [FromQuery] string sortOrder, [FromQuery] int pageNumber, [FromQuery] int pageSize)
     {
         try
@@ -96,31 +96,31 @@ public class ProductsController :  ControllerBase
         }
     }
     
-    [HttpGet("category/{categoryName}", Name = "GetProductsByCategory")]
-    public IActionResult GetProductsByCategory([FromRoute] string categoryName, [FromQuery] int pageNumber, [FromQuery] int pageSize)
-    {
-        try
-        {
-            var products = _unitOfWork.GetRepository<Product>()
-                .FindByCondition(x => x.Category!.CategoryName == categoryName,
-                    pageNumber, pageSize).ToList();
-            var productDtos = products.Select(product => new ProductDto
-            {
-                Id = product.Id,
-                ProductName = product.ProductName,
-                Weight = product.Weight,
-                UnitPrice = product.UnitPrice,
-                UnitsInStock = product.UnitsInStock,
-            }).ToList();
-        
-            return Ok(productDtos);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error occurred while fetching products by category.");
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    // [HttpGet("category/{categoryName}", Name = "GetProductsByCategory")]
+    // public IActionResult GetProductsByCategory([FromRoute] string categoryName, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+    // {
+    //     try
+    //     {
+    //         var products = _unitOfWork.GetRepository<Product>()
+    //             .FindByCondition(x => x.Category!.CategoryName == categoryName,
+    //                 pageNumber, pageSize).ToList();
+    //         var productDtos = products.Select(product => new ProductDto
+    //         {
+    //             Id = product.Id,
+    //             ProductName = product.ProductName,
+    //             Weight = product.Weight,
+    //             UnitPrice = product.UnitPrice,
+    //             UnitsInStock = product.UnitsInStock,
+    //         }).ToList();
+    //     
+    //         return Ok(productDtos);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         _logger.LogError(ex, "Error occurred while fetching products by category.");
+    //         return StatusCode(500, "Internal server error");
+    //     }
+    // }
     
     [HttpPut("{id}", Name = "UpdateProduct")]
     
