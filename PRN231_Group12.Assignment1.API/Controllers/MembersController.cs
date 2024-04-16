@@ -6,12 +6,12 @@ using PRN231_Group12.Assignment1.Repo.UnitOfWork;
 namespace PRN231_Group12.Assignment1.API.Controllers;
 [ApiController]
 [Route("[controller]")]
-public class MemberController :  ControllerBase
+public class MembersController :  ControllerBase
 {
-    private readonly ILogger<MemberController> _logger;
+    private readonly ILogger<MembersController> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public MemberController(ILogger<MemberController> logger, IUnitOfWork unitOfWork)
+    public MembersController(ILogger<MembersController> logger, IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;

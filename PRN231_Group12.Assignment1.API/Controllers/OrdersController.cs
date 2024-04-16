@@ -7,12 +7,12 @@ using PRN231_Group12.Assignment1.Repo.UnitOfWork;
 namespace PRN231_Group12.Assignment1.API.Controllers;
 [ApiController]
 [Route("[controller]")]
-public class OrderController :  ControllerBase
+public class OrdersController :  ControllerBase
 {
-    private readonly ILogger<OrderController> _logger;
+    private readonly ILogger<OrdersController> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public OrderController(ILogger<OrderController> logger, IUnitOfWork unitOfWork)
+    public OrdersController(ILogger<OrdersController> logger, IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
@@ -54,8 +54,8 @@ public class OrderController :  ControllerBase
         }
     }
 
-    [HttpGet("member/{id}/{pageNumber}/{pageSize}", Name = "GetOrdersByMember")]
-    public IActionResult GetOrderByMember([FromRoute] int id, [FromRoute] int pageNumber, [FromRoute] int pageSize)
+    [HttpGet("member/{id}", Name = "GetOrdersByMember")]
+    public IActionResult GetOrderByMember([FromRoute] int id, [FromQuery] int pageNumber, [FromQuery] int pageSize)
     {
         try
         {

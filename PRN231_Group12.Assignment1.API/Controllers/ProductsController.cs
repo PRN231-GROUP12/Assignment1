@@ -8,12 +8,12 @@ namespace PRN231_Group12.Assignment1.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ProductController :  ControllerBase
+public class ProductsController :  ControllerBase
 {
-    private readonly ILogger<ProductController> _logger;
+    private readonly ILogger<ProductsController> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public ProductController(ILogger<ProductController> logger, IUnitOfWork unitOfWork)
+    public ProductsController(ILogger<ProductsController> logger, IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;

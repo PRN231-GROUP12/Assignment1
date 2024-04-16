@@ -13,7 +13,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddUnitOfWork();
-builder.Services.AddDatabase();
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 var app = builder.Build();
 

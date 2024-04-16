@@ -13,20 +13,11 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IServiceCollection AddDatabase(this IServiceCollection services)
+    public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<FStoreDBContext>(options => options.UseSqlServer(GetConnectionString()));
+        var connectionStrings = configuration.GetSection(nameof(ConnectionStrings)).Get<ConnectionStrings>();
+        services.AddDbContext<FStoreDBContext>(options => options.UseSqlServer(connectionStrings.FStoreDB));
         return services;
     }
-
-    private static string GetConnectionString()
-    {
-        IConfigurationRoot config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", true, true)
-            .Build();
-        var strConn = config["ConnectionStrings:FStoreDB"];
-
-        return strConn;
-    }
+    
 }
